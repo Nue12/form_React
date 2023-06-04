@@ -48,7 +48,6 @@ export const DynamicForm = ({ formDemo, formData, setFormData }: Props) => {
             <input
               type="radio"
               value={option.value}
-              name="gender"
               required={formDemo.isRequired}
               checked={formData.Gender === option.value}
               onChange={(e) =>
