@@ -1,31 +1,20 @@
 import { secondFormType } from "../typings/secondFormType";
 import { FormDemo } from "../typings/secondFormType";
+import { normalizePhNoInput } from "../utils/NormalizeInput";
 
 type Props = {
   formDemo: FormDemo;
   setFormData: React.Dispatch<React.SetStateAction<secondFormType>>;
   formData: secondFormType;
+  handleSubmit: () => void;
 };
 
-const normalizeInput = (
-  value: string,
-  previousValue: string | undefined
-): string | undefined => {
-  const currentValue = value.replace(/[^\d]/g, "");
-  const cvLength = currentValue.length;
-
-  if (!previousValue || value.length > previousValue.length) {
-    if (cvLength < 4) return currentValue;
-    if (cvLength < 7)
-      return `(${currentValue.slice(0, 3)}) ${currentValue.slice(3)}`;
-    return `(${currentValue.slice(0, 3)}) ${currentValue.slice(
-      3,
-      6
-    )}-${currentValue.slice(6, 10)}`;
-  }
-};
-
-export const DynamicForm = ({ formDemo, formData, setFormData }: Props) => {
+export const DynamicForm = ({
+  formDemo,
+  formData,
+  setFormData,
+  handleSubmit,
+}: Props) => {
   if (formDemo.type === "input") {
     return (
       <>
@@ -69,7 +58,9 @@ export const DynamicForm = ({ formDemo, formData, setFormData }: Props) => {
           required={formDemo.isRequired}
           onChange={(e) => setFormData({ ...formData, City: e.target.value })}
         >
-          <option value={""} disabled></option>
+          <option value={""} disabled>
+            City
+          </option>
           {formDemo.options.map((option) => (
             <option key={option.title} value={option.value}>
               {option.title}
@@ -90,7 +81,10 @@ export const DynamicForm = ({ formDemo, formData, setFormData }: Props) => {
           placeholder="phone no"
           required={formDemo.isRequired}
           onChange={(e) => {
-            const phNo = normalizeInput(e.target.value, formData.Phone_Number);
+            const phNo = normalizePhNoInput(
+              e.target.value,
+              formData.Phone_Number
+            );
             setFormData({ ...formData, Phone_Number: phNo });
           }}
         />
@@ -112,9 +106,7 @@ export const DynamicForm = ({ formDemo, formData, setFormData }: Props) => {
   if (formDemo.type === "submit") {
     return (
       <>
-        <button onClick={() => console.log("submit form-2")}>
-          {formDemo.formName}
-        </button>
+        <button onClick={handleSubmit}>{formDemo.formName}</button>
       </>
     );
   }
