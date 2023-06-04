@@ -44,7 +44,7 @@ export const DynamicForm = ({ formDemo, formData, setFormData }: Props) => {
       <>
         <label>{formDemo.formName}</label>
         {formDemo.options.map((option) => (
-          <div key={option.title}>
+          <div key={option.title} className="radioDiv">
             <input
               type="radio"
               value={option.value}
