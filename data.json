@@ -1,9 +1,9 @@
 [
   {
-    "formName": "Name",
+    "formName": "Enter your name",
     "placeholder": "eg Mg Mg",
     "isRequired": true,
-    "type": "input",
+    "type": "text",
     "value": "",
     "isHidden": false,
     "isAction": false,
@@ -52,10 +52,10 @@
     ]
   },
   {
-    "formName": "Phone Number",
+    "formName": "Enter Phone Number",
     "placeholder": "+959420xxxx",
     "isRequired": true,
-    "type": "phoneinput",
+    "type": "tel",
     "value": "",
     "isAction": true,
     "isHidden": false,
@@ -77,7 +77,7 @@
     "placeholder": "",
     "isRequired": false,
     "type": "submit",
-    "value": "",
+    "value": "Submit",
     "isAction": false,
     "isHidden": false,
     "options": []

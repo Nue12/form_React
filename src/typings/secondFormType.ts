@@ -1,23 +1,16 @@
-export interface secondFormType {
-  Name: string;
-  Gender: string;
-  City: string;
-  Phone_Number: string | undefined;
-  Note: string;
-}
-
-interface OptionType {
+interface Options {
   title: string;
   value: string;
 }
 
-export interface FormDemo {
+export interface Form {
   formName: string;
   placeholder: string;
   isRequired: boolean;
   type: string;
-  value: string;
-  isHidden: boolean;
+  value: string | undefined;
   isAction: boolean;
-  options: OptionType[];
+  isHidden: boolean;
+  options: Options[] | [];
+  callbackUrl?: string | undefined;
 }

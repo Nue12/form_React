@@ -1,113 +1,104 @@
-import { secondFormType } from "../typings/secondFormType";
-import { FormDemo } from "../typings/secondFormType";
-import { normalizePhNoInput } from "../utils/NormalizeInput";
+import { Form } from "../typings/secondFormType";
 
 type Props = {
-  formDemo: FormDemo;
-  setFormData: React.Dispatch<React.SetStateAction<secondFormType>>;
-  formData: secondFormType;
-  handleSubmit: () => void;
+  form: Form;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+    index: number
+  ) => void;
+  index: number;
 };
 
-export const DynamicForm = ({
-  formDemo,
-  formData,
-  setFormData,
-  handleSubmit,
-}: Props) => {
-  if (formDemo.type === "input") {
+const Input = ({ form, handleChange, index }: Props) => {
+  if (form.type === "radio") {
     return (
       <>
-        <label>{formDemo.formName}</label>
-        <input
-          type={formDemo.type}
-          placeholder={formDemo.placeholder}
-          required={formDemo.isRequired}
-          onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
-        />
-      </>
-    );
-  }
-  if (formDemo.type === "radio") {
-    return (
-      <>
-        <label>{formDemo.formName}</label>
-        {formDemo.options.map((option) => (
-          <div key={option.title} className="radioDiv">
+        <label>{form.formName}</label>
+        {form.options.map((option) => (
+          <div key={option.title}>
             <input
-              type="radio"
+              type={form.type}
+              name={form.formName}
+              placeholder={form.placeholder}
               value={option.value}
-              required={formDemo.isRequired}
-              checked={formData.Gender === option.value}
-              onChange={(e) =>
-                setFormData({ ...formData, Gender: e.target.value })
-              }
+              required={form.isRequired}
+              checked={form.value === option.value}
+              onChange={(e) => handleChange(e, index)}
             />
-            {option.title}
+            <span>{option.title}</span>
           </div>
         ))}
       </>
     );
-  }
-  if (formDemo.type === "selectbox") {
+  } else {
     return (
       <>
-        <label>{formDemo.formName}</label>
-        <select
-          value={formData.City}
-          required={formDemo.isRequired}
-          onChange={(e) => setFormData({ ...formData, City: e.target.value })}
-        >
-          <option value={""} disabled>
-            City
-          </option>
-          {formDemo.options.map((option) => (
-            <option key={option.title} value={option.value}>
-              {option.title}
-            </option>
-          ))}
-        </select>
-      </>
-    );
-  }
-  if (formDemo.type === "phoneinput") {
-    return (
-      <>
-        <label>{formDemo.formName}</label>
+        {form.type !== "submit" && <label>{form.formName}</label>}
         <input
-          onBlur={() => console.log("check ph no ")}
-          type="tel"
-          value={formData.Phone_Number}
-          placeholder="phone no"
-          required={formDemo.isRequired}
-          onChange={(e) => {
-            const phNo = normalizePhNoInput(
-              e.target.value,
-              formData.Phone_Number
-            );
-            setFormData({ ...formData, Phone_Number: phNo });
-          }}
+          type={form.type}
+          placeholder={form.placeholder}
+          name={form.formName}
+          required={form.isRequired}
+          title={form.formName}
+          value={form.value}
+          onChange={(e) => handleChange(e, index)}
+          onBlur={
+            form.isAction ? () => console.log(form.callbackUrl) : undefined
+          }
         />
       </>
     );
   }
-  if (formDemo.type === "textarea") {
-    return (
-      <>
-        <label>{formDemo.formName}</label>
-        <textarea
-          placeholder={formDemo.placeholder}
-          onChange={(e) => setFormData({ ...formData, Note: e.target.value })}
-        />
-        ;
-      </>
-    );
-  }
-  if (formDemo.type === "submit") {
-    return (
-      <>
-        <button onClick={handleSubmit}>{formDemo.formName}</button>
-      </>
-    );
+};
+
+const TextArea = ({ form, handleChange, index }: Props) => {
+  return (
+    <>
+      <label>{form.formName}</label>
+      <textarea
+        placeholder={form.placeholder}
+        value={form.value}
+        required={form.isRequired}
+        name={form.formName}
+        title={form.formName}
+        onChange={(e) => handleChange(e, index)}
+        onBlur={form.isAction ? () => console.log(form.callbackUrl) : undefined}
+      />
+    </>
+  );
+};
+
+const SelectBox = ({ form, handleChange, index }: Props) => {
+  return (
+    <select
+      value={form.value}
+      required={form.isRequired}
+      onChange={(e) => handleChange(e, index)}
+      onBlur={form.isAction ? () => console.log(form.callbackUrl) : undefined}
+    >
+      <option value="" disabled>
+        {form.placeholder}
+      </option>
+      {form.options.map((option) => (
+        <option key={option.title} value={option.value}>
+          {option.title}
+        </option>
+      ))}
+    </select>
+  );
+};
+
+export const DynamicForm = ({ form, handleChange, index }: Props) => {
+  switch (form.type) {
+    case "selectbox":
+      return (
+        <SelectBox form={form} handleChange={handleChange} index={index} />
+      );
+    case "textarea":
+      return <TextArea form={form} handleChange={handleChange} index={index} />;
+    default:
+      return <Input form={form} handleChange={handleChange} index={index} />;
   }
 };
